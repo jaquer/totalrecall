@@ -54,11 +54,11 @@ class CaptureFragment : Fragment() {
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val allGranted = permissions.entries.all { it.value }
-        if (allGranted) {
+        val cameraGranted = permissions[Manifest.permission.CAMERA] == true
+        if (cameraGranted) {
             startCamera()
         } else {
-            Toast.makeText(requireContext(), "Permissions not granted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -90,7 +90,7 @@ class CaptureFragment : Fragment() {
             showPreCaptureUI()
 
             // Only request permissions if not already granted
-            if (allPermissionsGranted()) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 startCamera()
             } else {
                 requestPermissions()
