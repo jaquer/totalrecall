@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qq7te.totalrecall.ui.detail.SwipeAwareScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
@@ -62,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Edit Entry"
+            android:text="Edit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_content"
             app:layout_constraintEnd_toStartOf="@+id/button_delete"
@@ -74,11 +76,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:backgroundTint="@android:color/holo_red_dark"
-            android:text="Delete Entry"
+            android:text="Delete"
             android:textColor="@android:color/white"
             app:layout_constraintStart_toEndOf="@+id/button_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView> 
+</com.qq7te.totalrecall.ui.detail.SwipeAwareScrollView>

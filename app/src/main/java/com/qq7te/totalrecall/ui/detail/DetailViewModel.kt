@@ -13,23 +13,38 @@ class DetailViewModel(
     private val repository: EntryRepository,
     private val entryId: Long
 ) : ViewModel() {
-    
+
+    private var currentEntryId: Long = entryId
+
     private val _entry = MutableLiveData<Entry?>()
     val entry: LiveData<Entry?> = _entry
-    
+
     private val _deleteResult = MutableLiveData<Boolean?>()
     val deleteResult: LiveData<Boolean?> = _deleteResult
-    
+
+    private val _previousEntryId = MutableLiveData<Long?>()
+    val previousEntryId: LiveData<Long?> = _previousEntryId
+
+    private val _nextEntryId = MutableLiveData<Long?>()
+    val nextEntryId: LiveData<Long?> = _nextEntryId
+
     init {
         refreshEntry()
     }
-    
+
+    fun navigateTo(id: Long) {
+        currentEntryId = id
+        refreshEntry()
+    }
+
     fun refreshEntry() {
         viewModelScope.launch {
             try {
-                _entry.value = repository.getEntryById(entryId)
+                val entry = repository.getEntryById(currentEntryId)
+                _entry.value = entry
+                _previousEntryId.value = repository.getPreviousEntryId(entry.timestamp)
+                _nextEntryId.value = repository.getNextEntryId(entry.timestamp)
             } catch (e: Exception) {
-                // Handle the case where the entry doesn't exist
                 _entry.value = null
             }
         }

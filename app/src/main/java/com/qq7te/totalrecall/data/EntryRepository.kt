@@ -47,4 +47,16 @@ class EntryRepository(private val entryDao: EntryDao) {
             entryDao.clearAllEntries()
         }
     }
+
+    suspend fun getNextEntryId(timestamp: java.util.Date): Long? {
+        return withContext(Dispatchers.IO) {
+            entryDao.getNextEntryId(timestamp)
+        }
+    }
+
+    suspend fun getPreviousEntryId(timestamp: java.util.Date): Long? {
+        return withContext(Dispatchers.IO) {
+            entryDao.getPreviousEntryId(timestamp)
+        }
+    }
 } 

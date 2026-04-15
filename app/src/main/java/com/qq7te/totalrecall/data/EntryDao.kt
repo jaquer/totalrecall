@@ -31,4 +31,10 @@ interface EntryDao {
     
     @Query("DELETE FROM entries")
     suspend fun clearAllEntries()
+
+    @Query("SELECT id FROM entries WHERE timestamp < :timestamp ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getNextEntryId(timestamp: java.util.Date): Long?
+
+    @Query("SELECT id FROM entries WHERE timestamp > :timestamp ORDER BY timestamp ASC LIMIT 1")
+    suspend fun getPreviousEntryId(timestamp: java.util.Date): Long?
 } 

@@ -18,9 +18,11 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class DetailFragment : Fragment() {
-    
+
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
+
+    private var isAnimating = false
     
     private val args: DetailFragmentArgs by navArgs()
     
@@ -99,11 +101,50 @@ class DetailFragment : Fragment() {
         }
 
         binding.buttonEdit.setOnClickListener {
-            val action = DetailFragmentDirections.actionDetailToCapture(args.entryId)
+            val currentId = viewModel.entry.value?.id ?: args.entryId
+            val action = DetailFragmentDirections.actionDetailToCapture(currentId)
             findNavController().navigate(action)
+        }
+
+        binding.scrollView.onSwipeLeft = {
+            if (!isAnimating && childFragmentManager.findFragmentByTag("photo_viewer") == null) {
+                viewModel.nextEntryId.value?.let { nextId ->
+                    animateToEntry(nextId, slideLeft = true)
+                }
+            }
+        }
+
+        binding.scrollView.onSwipeRight = {
+            if (!isAnimating && childFragmentManager.findFragmentByTag("photo_viewer") == null) {
+                viewModel.previousEntryId.value?.let { prevId ->
+                    animateToEntry(prevId, slideLeft = false)
+                }
+            }
         }
     }
     
+    private fun animateToEntry(id: Long, slideLeft: Boolean) {
+        isAnimating = true
+        val content = binding.contentLayout
+        val width = content.width.toFloat()
+        val exitTo = if (slideLeft) -width else width
+        val enterFrom = if (slideLeft) width else -width
+        content.animate()
+            .translationX(exitTo)
+            .setDuration(150)
+            .withEndAction {
+                viewModel.navigateTo(id)
+                binding.scrollView.scrollTo(0, 0)
+                content.translationX = enterFrom
+                content.animate()
+                    .translationX(0f)
+                    .setDuration(150)
+                    .withEndAction { isAnimating = false }
+                    .start()
+            }
+            .start()
+    }
+
     override fun onResume() {
         super.onResume()
         viewModel.refreshEntry()
