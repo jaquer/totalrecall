@@ -63,9 +63,12 @@ class ExportService(
             // Process each entry and generate unique photo filenames
             entries.forEach { entry ->
                 val originalPhotoPath = entry.photoPath
-                val uniqueFilename = generateUniquePhotoFilename(originalPhotoPath, photoFilenameMap)
-                photoFilenameMap[originalPhotoPath] = uniqueFilename
-                
+                val uniqueFilename = if (originalPhotoPath != null) {
+                    val name = generateUniquePhotoFilename(originalPhotoPath, photoFilenameMap)
+                    photoFilenameMap[originalPhotoPath] = name
+                    name
+                } else null
+
                 exportEntries.add(entry.toExportEntry(uniqueFilename))
             }
             

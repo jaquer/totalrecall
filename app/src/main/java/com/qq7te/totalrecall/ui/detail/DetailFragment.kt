@@ -43,39 +43,42 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Click listener to open full-screen photo viewer
-        binding.photo.setOnClickListener {
-            viewModel.entry.value?.let { entry ->
-                val dialog = PhotoViewerDialogFragment.newInstance(entry.photoPath)
-                dialog.show(childFragmentManager, "photo_viewer")
-            }
-        }
-        
         viewModel.entry.observe(viewLifecycleOwner) { entry ->
             entry?.let {
                 binding.textContent.text = it.text
-                
+
                 val dateFormat = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
                 binding.timestamp.text = dateFormat.format(it.timestamp)
-                
+
                 if (it.latitude != null && it.longitude != null) {
                     binding.location.text = "Location: ${it.latitude}, ${it.longitude}"
                     binding.location.visibility = View.VISIBLE
                 } else {
                     binding.location.visibility = View.GONE
                 }
-                
-                Glide.with(this)
-                    .load(Uri.parse(it.photoPath))
-                    .fitCenter()
-                    .into(binding.photo)
 
-                // Cap photo height to 80% of the current viewport after layout
-                binding.photo.post {
-                    val parentHeight = binding.root.height
-                    if (parentHeight > 0) {
-                        binding.photo.maxHeight = (parentHeight * 0.8f).toInt()
+                if (it.photoPath != null) {
+                    val photoPath = it.photoPath
+                    binding.photo.visibility = View.VISIBLE
+                    binding.photo.setOnClickListener {
+                        val dialog = PhotoViewerDialogFragment.newInstance(photoPath)
+                        dialog.show(childFragmentManager, "photo_viewer")
                     }
+                    Glide.with(this)
+                        .load(Uri.parse(it.photoPath))
+                        .fitCenter()
+                        .into(binding.photo)
+
+                    // Cap photo height to 80% of the current viewport after layout
+                    binding.photo.post {
+                        val parentHeight = binding.root.height
+                        if (parentHeight > 0) {
+                            binding.photo.maxHeight = (parentHeight * 0.8f).toInt()
+                        }
+                    }
+                } else {
+                    binding.photo.visibility = View.GONE
+                    binding.photo.setOnClickListener(null)
                 }
             }
         }

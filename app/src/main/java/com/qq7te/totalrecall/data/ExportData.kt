@@ -14,7 +14,7 @@ data class ExportEntry(
     val text: String,
     
     @SerializedName("photo_filename")
-    val photoFilename: String,
+    val photoFilename: String?,
     
     @SerializedName("timestamp")
     val timestamp: Long, // Unix timestamp in milliseconds
@@ -46,7 +46,7 @@ data class ExportData(
 /**
  * Extension function to convert Entry to ExportEntry with a unique photo filename
  */
-fun Entry.toExportEntry(uniquePhotoFilename: String): ExportEntry {
+fun Entry.toExportEntry(uniquePhotoFilename: String?): ExportEntry {
     return ExportEntry(
         id = this.id,
         text = this.text,

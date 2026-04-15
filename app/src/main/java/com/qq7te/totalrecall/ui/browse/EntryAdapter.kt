@@ -46,10 +46,15 @@ class EntryAdapter(private val onItemClick: (Long) -> Unit) :
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             binding.date.text = dateFormat.format(entry.timestamp)
             
-            Glide.with(binding.thumbnail)
-                .load(Uri.parse(entry.photoPath))
-                .centerCrop()
-                .into(binding.thumbnail)
+            if (entry.photoPath != null) {
+                binding.thumbnail.visibility = android.view.View.VISIBLE
+                Glide.with(binding.thumbnail)
+                    .load(Uri.parse(entry.photoPath))
+                    .centerCrop()
+                    .into(binding.thumbnail)
+            } else {
+                binding.thumbnail.visibility = android.view.View.GONE
+            }
         }
     }
     

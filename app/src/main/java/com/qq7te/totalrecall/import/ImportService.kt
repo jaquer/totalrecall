@@ -82,7 +82,7 @@ class ImportService(
                 
                 // Process each entry and import photos as native content URIs
                 exportData.entries.forEach { exportEntry ->
-                    val nativePhotoUri = if (exportEntry.photoFilename != "null.jpg") {
+                    val nativePhotoUri = if (exportEntry.photoFilename != null) {
                         importPhotoAsNative(zip, exportEntry.photoFilename)?.also {
                             photosImported++
                         }

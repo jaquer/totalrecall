@@ -9,7 +9,7 @@ data class Entry(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val text: String,
-    val photoPath: String,
+    val photoPath: String?,
     val timestamp: Date,
     val latitude: Double?,
     val longitude: Double?

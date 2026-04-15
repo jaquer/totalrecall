@@ -8,7 +8,7 @@ import java.util.Date
 
 class CaptureViewModel(private val repository: EntryRepository) : ViewModel() {
     
-    suspend fun saveEntry(text: String, photoUri: String, latitude: Double?, longitude: Double?) {
+    suspend fun saveEntry(text: String, photoUri: String?, latitude: Double?, longitude: Double?) {
         val entry = Entry(
             text = text,
             photoPath = photoUri,

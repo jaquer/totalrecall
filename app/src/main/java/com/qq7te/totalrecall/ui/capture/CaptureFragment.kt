@@ -196,13 +196,10 @@ class CaptureFragment : Fragment() {
     
     private fun saveEntry() {
         val text = binding.entryText.text.toString()
-        if (text.isBlank()) {
-            val message = if (editingEntryId != null) {
-                "Please enter text"
-            } else {
-                "Please enter text and take a photo"
-            }
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+
+        // For new entries, require at least a photo or text
+        if (editingEntryId == null && photoUri == null && text.isBlank()) {
+            Toast.makeText(requireContext(), "Please take a photo or enter text", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -226,7 +223,7 @@ class CaptureFragment : Fragment() {
             lifecycleScope.launch {
                 viewModel.saveEntry(
                     text = text,
-                    photoUri = photoUri.toString(),
+                    photoUri = photoUri?.toString(),
                     latitude = location?.latitude,
                     longitude = location?.longitude
                 )
@@ -242,7 +239,7 @@ class CaptureFragment : Fragment() {
             lifecycleScope.launch {
                 viewModel.saveEntry(
                     text = text,
-                    photoUri = photoUri.toString(),
+                    photoUri = photoUri?.toString(),
                     latitude = null,
                     longitude = null
                 )
