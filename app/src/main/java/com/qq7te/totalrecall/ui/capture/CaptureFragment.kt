@@ -214,11 +214,14 @@ class CaptureFragment : Fragment() {
             return
         }
         
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
+        val hasLocation = ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
-        ) {
+
+        if (hasLocation) {
             val location = getLastKnownLocation()
             lifecycleScope.launch {
                 viewModel.saveEntry(
